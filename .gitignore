@@ -1,0 +1,9 @@
+test/
+test.c
+test
+./a.out
+bin
+obj
+DS_Store
+*.o
+
