@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/19 06:08:46 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/21 06:21:36 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,9 +267,319 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-// **	FIFO's in Unix : is a type file that can be used as a pipe
-int	main()
-{
-	mkfifo("testing", 0777);
-	return (0);
-}
+
+// **	FIFO's in Unix : is a type file that can be used as a pipe (ls -l)
+// **	mkfifo() waits for its other end (if you open() the file, created
+//**		by mkfifo(). open() will hang untill a reader from the file
+// ** 		(i.e open another terminal then cat testing, or write another
+// **		 program that reads from the FIFO then launch it)), and vice versa.
+// **	if the flag of open() is O_WRONLY, you must open another processes for
+// **		reading from the FIFO file, unless flag is O_RDWR so it can read
+// **		and write. so, open doesn't hangs openned. you can create a
+// **		FIFO file via the command {mkfifo "file_name"}
+// int	main()
+// {
+// 	printf("\nMkfifo\n");
+// 	if (mkfifo("testing", 0777) == -1)
+// 		if (errno != EEXIST)
+// 			return 4;
+// 	printf("\nopenning\n");
+// 	int fd = open("testing", O_RDWR);
+// 	printf("\nopenned\n");
+// 	if (write(fd, "hey", 3) == -1)
+// 		return 2;
+// 	printf("\nWritten\n");
+// 	close(fd);
+// 	return (0);
+// }
+
+// **	Send numbers to the child, Mutiply, send it back to the parent to print
+// **	it on the screen. Created two pipes, so we can write and read without
+// **	worrying about printing the res before child process finish.
+// **	we don't risk to read our content
+// int	main()
+// {
+// 	int fd[2]; // C ==> P
+// 	int fd1[2]; // P ==> C
+// 	int res = 0;
+
+// 	if (pipe(fd) == -1)
+// 		return (1);
+// 	if (pipe(fd1) == -1)
+// 		return (1);
+// 	int pid = fork();
+// 	if (pid == -1)
+// 		return (2);
+// 	if (pid != 0)
+// 	{
+// 		close(fd[0]);
+// 		close(fd1[1]);
+// 		if (read(fd1[0], &res, sizeof(int)) == -1)
+// 			return (2);
+// 		res *= 4;
+// 		close(fd1[0]);
+// 		if (write(fd[1], &res, sizeof(res)) == -1)
+// 			return (perror("write"), 3);
+// 		close(fd[1]);
+// 	}
+// 	else
+// 	{
+// 		close(fd[1]);
+// 		close(fd1[0]);
+// 		int arr = 7;
+// 		if (write(fd1[1], &arr, sizeof(int)) == -1)
+// 			return (4);
+// 		close(fd[1]);
+// 		if (read(fd[0], &res, sizeof(res)) == -1)
+// 			return (5);
+// 		close(fd[0]);
+// 		printf("res = %d\n", res);
+// 	}
+// 	return (0);
+// }
+
+/*
+**	After calling exec() functions family, the whole process get replaced by
+**		that new called process.
+**	All instructions after execve() will no longer be executed, to get around
+**		this, you could fork() then exec instructions with child, wait() in 
+**		parent
+*/
+// int	main(int ac, char **av, char **env)
+// {
+// 	if (ac < 2)
+// 		return (1);
+// 	int pid = fork();
+// 	if (pid == -1)
+// 		return (3);
+// 	if (pid == 0)
+// 	{
+// 		if (execve("/bin/ls", av, env) == -1)
+// 		{
+// 			perror("execve");
+// 			return (2);
+// 		}
+// 		printf("\nBYE BYE THIS PRINTF\n");
+// 	}
+// 	else
+// 	{
+// 		wait(NULL);
+// 		printf("\nExecve() has finished\n");
+// 	}
+// 	return (0);
+// }
+
+/*	
+**	exec -l -v -p -e ('p' and 'e' are optional, 'e' is for environment
+**		, and 'p' is for the path variable if you specify execl(),
+**		for the command in "const char *")
+** 		you could specify the optionschar *arr[] = { "ls" "-l" NULL };
+*/
+/*
+**	the zero in front of the permissions in open(), means that it's
+**		an octal number
+**	dup(p1) returns another fd that points to the same file
+**	dup2(p1, p2) p1 is the fd that you want to clone, and p2 is the fd that
+**		will be pointing to the same fd as p1
+*/
+// **	Checking Exit  status code, and changing STDOUT to point to a file
+// **		then changing back STDOUT_FILENO to point to terminal
+// int	main(int argc, char **av)
+// {
+// 	if (argc < 2)
+// 		return (printf("Add Options for ls command\n"),10);
+// 	int	pid = fork();
+// 	if (pid == -1)
+// 		return (2);
+// 	if (pid == 0)
+// 	{
+// 		int fd = open("test/stdout.txt", O_WRONLY | O_CREAT, 0777);
+// 		if (fd == -1)
+// 			return (4);
+// 		int du = dup(STDOUT_FILENO);
+// 		int fd2 = dup2(fd, STDOUT_FILENO);
+// 		if (fd2 == -1)
+// 			return (5);
+// 		int fo = fork();
+// 		if (fo == 0)
+// 			execve("/bin/ls", av, NULL);
+// 		else
+// 		{
+// 			dup2(du, STDOUT_FILENO);
+// 			printf("I'm the child\n");
+// 		}
+// 	}
+// 	else
+// 	{
+// 		int wstatus;
+// 		wait(&wstatus);
+// 		if (WIFEXITED(wstatus))
+// 		{
+// 			int code_status;
+// 		code_status = WEXITSTATUS(wstatus);
+// 		if (code_status == 0)
+// 			printf("Exited with success %d\n", code_status);
+// 		else
+// 			printf("failure with code status %d\n", code_status);
+// 		}
+// 		printf("I'm the parent\n");
+// 	}
+// }
+
+
+// #include <signal.h>
+// **	Signals in C. Send a SIGKILL to child process after 2seconds
+// ** 		SIGCHILD used to tell the parent that the child finished 
+// **		execution
+// **		SIGSTOP and SIGCONT to stop and continue execution of a process
+// int main()
+// {
+// 	int pid = fork();
+// 	if (pid == -1)
+// 		return (1);
+// 	if (pid == 0)
+// 	{
+// 		while (1)
+// 		{
+// 			printf("Ctrl ^ C Won't help you hhhh\n");
+// 			usleep(50000);
+// 		}
+			
+// 	}	
+// 	else
+// 	{
+// 		sleep(2);
+// 		kill(pid, SIGKILL);
+// 		wait(NULL);
+// 	}
+// 	return (0);
+// }
+
+// ** you can send the size of an array before sending the array itself
+// int main()
+// {
+// 	int fd[2];
+// 	pipe(fd);
+// 	int pid = fork();
+// 	if (pid == -1)
+// 		return (1);
+// 	if (pid == 0)
+// 	{
+// 		close(fd[0]);
+// 		int n = 7;
+// 		int arr[] = { 1, 2, 3, 4, 5, 10, 11};
+// 		write(fd[1], &n, sizeof(n));
+// 		write(fd[1], arr, sizeof(arr));
+// 		close(fd[1]);
+// 	}
+// 	else
+// 	{
+// 		close(fd[1]);
+// 		wait(NULL);
+// 		int n = 0;
+// 		read(fd[0], &n, sizeof(n));
+// 		int arr[n];
+// 		read(fd[0], arr, sizeof(arr));
+// 		close(fd[0]);
+// 		int ar = (sizeof(arr) / sizeof(int));
+// 		int res = 0;
+// 		while(ar > 0)
+// 		{
+// 			ar--;
+// 			res += arr[ar];
+// 			printf("arr[%d] = %d\n", ar, arr[ar]);
+// 		}
+// 		printf("res = %d", res);
+// 	}
+// 	return (0);
+// }
+
+// Sending a string through a pipe, then print it by the child
+// int	main(int ac, char **av)
+// {
+// 	if (ac < 2)
+// 		return (printf("pass a string\n"), 3);
+// 	int fd[2];
+// 	if (pipe(fd) == -1)
+// 		return (1);
+// 	int pid = fork();
+// 	if (pid == -1)
+// 		return (2);
+// 	if (pid == 0)
+// 	{
+// 		close(fd[0]);
+// 		int len = 0, i = 1;
+// 		while (av && av[i])
+// 		{
+// 			len += ft_strlen(av[i]);
+// 			i++;
+// 		}
+// 		len += i;
+// 		write(fd[1], &len, sizeof(len));
+// 		i = 1;
+// 		while (av && av[i])
+// 		{
+// 			write(fd[1], av[i], ft_strlen(av[i]));
+// 			write(fd[1], " ", 1);
+// 			i++;
+// 		}
+// 		close(fd[1]);
+// 	}
+// 	else
+// 	{
+// 		wait(NULL);
+// 		close(fd[1]);
+// 		int len = 0;
+// 		read(fd[0], &len, sizeof(sizeof(char), len));
+// 		char *s = (char *)malloc(len);
+// 		s[len] = '\0';
+// 		read(fd[0], s, len);
+// 		printf("%s\n", s);
+// 		free(s);
+// 		close(fd[0]);
+// 	}
+// 	return (0);
+// }
+
+
+// **	Simulating pipe '|' operator in c
+/*
+**	cat test/stdout.txt | grep @
+**	|					 |	  |
+**	|__________________ Pipe _|
+**		STDOUT				 STDIN
+*/
+// int	main(int ac, char **av, char **env)
+// {
+// 	int	fd[2];
+// 	int pid = 0;
+// 	int std = 0;
+// 	if (ac < 2)
+// 		return (printf("./bin/pipex \"File to read\""), 1);
+// 	if (pipe(fd) == -1)
+// 		return (2);
+// 	std = dup(STDOUT_FILENO);
+// 	if ((pid = fork()) == -1)
+// 		return (3);
+// 	if (pid == 0)
+// 	{
+// 		dup2(fd[1], STDOUT_FILENO);
+// 		close(fd[0]);
+// 		close(fd[1]);
+// 		execve("/bin/cat", av, env);
+// 	}
+// 	if ((pid = fork()) == -1)
+// 		return (4);
+// 	if (pid == 0)
+// 	{
+// 		dup2(fd[0], STDIN_FILENO);
+// 		close(fd[0]);
+// 		close(fd[1]);
+// 		execve("/usr/bin/grep", (char *[]){"grep", "@", NULL}, env);
+// 		// if (execlp("/usr/bin/grep", "grep", "@", NULL) == -1)
+// 		// 	 	return 5;
+// 	}
+// 	close(fd[0]);
+// 	close(fd[1]);
+// 	wait(NULL);		
+// }
