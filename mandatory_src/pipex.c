@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:46 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/17 04:01:56 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/22 06:38:44 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,30 +46,85 @@
 
 #include "pipex.h"
 
-char	*path_is(char **env)
+// char	*join_path(char **split, char *cmd)
+// {
+// 	char	*temp;
+// 	char	**cmd_split;
+// 	int		i;
+	
+// 	i = 0;
+// 	cmd_split= ft_split(cmd, ' '); // grep
+// 	if (!cmd_split)
+// 		return (free_st(split, -1), free_st(cmd_split, -1), NULL);
+// 	temp = ft_strjoin("/", cmd_split[0]);
+// 	free(cmd_split[0]);
+// 	cmd_split[0] = temp;
+// 	free(temp);
+// 	while (split && split[i])
+// 	{
+// 		temp = ft_strjoin(split[i], cmd_split[0]);
+// 		free(split[i]);
+// 		split[i] = temp;
+// 		free(temp);
+// 		// printf("%s | i = %d | cmd = %s \n", split[i], i, cmd_split[0]);
+// 		if (access(split[i], X_OK) == 0)
+// 			return (free_st(cmd_split, -1), free_st(split, i), split[i]); // free
+// 		i++;
+// 	}
+// 	free_st(cmd_split, -1);
+// 	free_st(split, -1);
+// 	return (NULL);
+// }
+
+char *join_path(char **split, char *cmd)
+{
+	char *temp;
+	char **cmd_split;
+	int i;
+
+	i = 0;
+	cmd_split = ft_split(cmd, ' '); // grep
+	if (!cmd_split)
+		return (free_st(split, -1), free_st(cmd_split, -1), NULL);
+	temp = ft_strjoin("/", cmd_split[0]);
+	free(cmd_split[0]);
+	cmd_split[0] = temp;
+	free(temp);
+	while (split && split[i])
+	{
+		temp = ft_strjoin(split[i], cmd_split[0]);
+		// free(split[i]);
+		// split[i] = temp;
+		// free(temp);
+		printf("%s | i = %d | cmd = %s \n", temp, i, cmd_split[0]);
+		if (access(temp, X_OK) == 0)
+			return (free_st(cmd_split, -1), free_st(split, -1), temp); // free
+		free(temp);
+		i++;
+	}
+	free_st(cmd_split, -1);
+	free_st(split, -1);
+	return (NULL);
+}
+
+char *path_is(char **env, char *cmd)
 {
 	char	**split;
-	char	*temp;
-	
-	if (!env || !(*env))
+	// char	**tmp;
+
+	split = NULL;
+	if (!env || !(*env) || !cmd)
 		return (NULL);
 	while (env && *env)
 	{
 		if (strncmp(*env, "PATH=", 5) == 0)
-			break;
+		{
+			split = ft_split(*env + 5, ':');
+			if (!split)
+				return (p(__FILE__, __LINE__, 0), perror("split"), NULL);
+			return (join_path(split, cmd));
+		}
 		env++;
 	}
-	split = ft_split(*env, ':');
-	if (!split)
-		return (ft_printf("%s line %d	", __FILE__, __LINE__, -1), 
-			perror("split"), NULL);
-	while (split && *split)
-	{
-		temp = ft_strjoin(*split, "/");
-		free(*split);
-		*split = temp;
-		free(temp);
-		split++;
-	}
-	return (*env);
+	return (NULL);
 }
