@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/21 06:21:36 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/22 03:50:26 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -583,3 +583,52 @@
 // 	close(fd[1]);
 // 	wait(NULL);		
 // }
+
+int main(int ac, char **av)
+{
+	char **command1;
+	char **command2;
+	(void)ac;
+	int fd[2];
+	pipe(fd);
+
+	pid_t pid1 = fork();
+	//child1
+	if(pid1 == 0)
+	{
+		command1 = ft_split(av[2], ' ');
+		close(fd[0]);
+		int fd_infile = open(av[1], O_RDONLY, 0777);
+		dup2(fd_infile, STDIN_FILENO);
+		close(fd_infile);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		execvp(command1[0], command1);
+	}
+	else
+	{
+		command2 = ft_split(av[3], ' ');
+		pid_t pid2 = fork();
+		//child 2
+		if(pid2 == 0)
+		{
+			dup2(fd[0], STDIN_FILENO);
+			close(fd[0]);
+			close(fd[1]);
+			int fd_outfile = open(av[4], O_CREAT | O_TRUNC | O_WRONLY, 0777);
+			dup2(fd_outfile, STDOUT_FILENO);
+			close(fd_outfile);
+			execvp(command2[0], command2);
+		}
+		else
+		{
+			close(fd[0]);
+			close(fd[1]);
+			waitpid(pid1, NULL, 0);
+			waitpid(pid2, NULL, 0);
+		}
+		printf("ALL DONE!!");
+	}
+	// int fd = open("infile", O_RDONLY, 0777);
+	
+}
