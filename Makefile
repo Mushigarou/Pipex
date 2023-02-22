@@ -6,7 +6,7 @@
 #    By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/15 04:43:36 by mfouadi           #+#    #+#              #
-#    Updated: 2023/02/17 04:34:50 by mfouadi          ###   ########.fr        #
+#    Updated: 2023/02/22 10:13:40 by mfouadi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,10 @@ lib :
 re_lib :
 	make fclean -C Libft
 
+debug :
+	make
+	$(CC) $(CFLAGS) -fsanitize=address $(OBJ_M_SRC_PATH) $(LIBFT_ARCHIVE) -o $(NAME)
+
 clean :
 	make clean -C Libft
 	$(RM) obj
@@ -54,5 +58,5 @@ fclean : clean re_lib
 
 re : re_lib fclean all
 
-.PHONY : all $(NAME) clean fclean re lib dir re_lib
+.PHONY : all $(NAME) clean fclean re lib dir re_lib debug
 .DEFAULT_GOAL := all

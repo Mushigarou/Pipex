@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:46 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/22 06:38:44 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/22 11:58:14 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,63 +46,39 @@
 
 #include "pipex.h"
 
-// char	*join_path(char **split, char *cmd)
-// {
-// 	char	*temp;
-// 	char	**cmd_split;
-// 	int		i;
-	
-// 	i = 0;
-// 	cmd_split= ft_split(cmd, ' '); // grep
-// 	if (!cmd_split)
-// 		return (free_st(split, -1), free_st(cmd_split, -1), NULL);
-// 	temp = ft_strjoin("/", cmd_split[0]);
-// 	free(cmd_split[0]);
-// 	cmd_split[0] = temp;
-// 	free(temp);
-// 	while (split && split[i])
-// 	{
-// 		temp = ft_strjoin(split[i], cmd_split[0]);
-// 		free(split[i]);
-// 		split[i] = temp;
-// 		free(temp);
-// 		// printf("%s | i = %d | cmd = %s \n", split[i], i, cmd_split[0]);
-// 		if (access(split[i], X_OK) == 0)
-// 			return (free_st(cmd_split, -1), free_st(split, i), split[i]); // free
-// 		i++;
-// 	}
-// 	free_st(cmd_split, -1);
-// 	free_st(split, -1);
-// 	return (NULL);
-// }
-
-char *join_path(char **split, char *cmd)
+char	*join_path(char **split, char *cmd)
 {
-	char *temp;
-	char **cmd_split;
-	int i;
+	char	**av_cmd;
+	char	*tmp;
+	char	*path;
+	int		i;
 
 	i = 0;
-	cmd_split = ft_split(cmd, ' '); // grep
-	if (!cmd_split)
-		return (free_st(split, -1), free_st(cmd_split, -1), NULL);
-	temp = ft_strjoin("/", cmd_split[0]);
-	free(cmd_split[0]);
-	cmd_split[0] = temp;
-	free(temp);
-	while (split && split[i])
-	{
-		temp = ft_strjoin(split[i], cmd_split[0]);
-		// free(split[i]);
-		// split[i] = temp;
-		// free(temp);
-		printf("%s | i = %d | cmd = %s \n", temp, i, cmd_split[0]);
-		if (access(temp, X_OK) == 0)
-			return (free_st(cmd_split, -1), free_st(split, -1), temp); // free
-		free(temp);
-		i++;
-	}
-	free_st(cmd_split, -1);
+	if (!cmd)
+		return (NULL);
+	av_cmd = ft_split(cmd, ' ');
+	tmp = ft_strjoin("/", av_cmd[0]);
+	free_st(av_cmd, -1);
+	// if (strncmp(tmp+1, "./", 2) == 0)
+	// {
+	// 	printf("tmp = %s\n", tmp);
+	// 	printf("\notu\n");
+	// 	path = ft_strjoin(split[i], tmp);
+	// 	if (access(path, X_OK | F_OK) == 0)
+	// 		return (free_st(split, -1), free(tmp), path);
+	// }
+	// else
+	// {
+		while (split && split[i])
+		{
+			path = ft_strjoin(split[i], tmp);
+			if (access(path, X_OK) == 0)
+				return (free_st(split, -1), free(tmp), path);
+			free(path);
+			i++;
+		}
+	// }
+	free(tmp);
 	free_st(split, -1);
 	return (NULL);
 }
@@ -111,7 +87,7 @@ char *path_is(char **env, char *cmd)
 {
 	char	**split;
 	// char	**tmp;
-
+	
 	split = NULL;
 	if (!env || !(*env) || !cmd)
 		return (NULL);

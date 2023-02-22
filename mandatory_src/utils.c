@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:40 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/22 05:42:10 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/22 11:36:36 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,14 @@
 void	p(char *file, int line, int msg)
 {
 	if (msg == 0 && file && line != 0)
-		ft_printf("%s line %d	", file, line, -1);
+		ft_printf("%s line %d	", file, line);
 	else if (msg == 1)
 		ft_printf("./pipex infile cmd1 cmd2 outfile");
+	else if (msg == 2)
+	{
+		ft_printf("%s line %d	", file, line);
+		ft_printf("PATH or command not found");
+	}
 	return;
 }
 
