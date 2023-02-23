@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:46 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/22 11:58:14 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/23 02:17:28 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,25 +59,16 @@ char	*join_path(char **split, char *cmd)
 	av_cmd = ft_split(cmd, ' ');
 	tmp = ft_strjoin("/", av_cmd[0]);
 	free_st(av_cmd, -1);
-	// if (strncmp(tmp+1, "./", 2) == 0)
-	// {
-	// 	printf("tmp = %s\n", tmp);
-	// 	printf("\notu\n");
-	// 	path = ft_strjoin(split[i], tmp);
-	// 	if (access(path, X_OK | F_OK) == 0)
-	// 		return (free_st(split, -1), free(tmp), path);
-	// }
-	// else
-	// {
-		while (split && split[i])
-		{
+	while (split && split[i])
+	{
+		if (access(av_cmd[0], X_OK | F_OK) == 0)
+			return (free(tmp), free_st(av_cmd, 0), av_cmd[0]);
 			path = ft_strjoin(split[i], tmp);
-			if (access(path, X_OK) == 0)
-				return (free_st(split, -1), free(tmp), path);
-			free(path);
-			i++;
-		}
-	// }
+		if (access(path, X_OK | F_OK) == 0)
+			return (free_st(split, -1), free(tmp), free_st(av_cmd, -1), path);
+		free(path);
+		i++;
+	}
 	free(tmp);
 	free_st(split, -1);
 	return (NULL);
@@ -100,6 +91,7 @@ char *path_is(char **env, char *cmd)
 				return (p(__FILE__, __LINE__, 0), perror("split"), NULL);
 			return (join_path(split, cmd));
 		}
+		//strnstr(*env, "PWD=")
 		env++;
 	}
 	return (NULL);
