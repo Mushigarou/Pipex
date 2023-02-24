@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/23 02:15:32 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/24 01:39:55 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,26 @@
 //p(__FILE__, __LINE__);
 int main(int ac, char **av, char **env)
 {
-	char	*path;
-	(void)env;
-	if (ac != 5)
-		return (p(NULL, 0, 1), 0);
-	if (!(path = path_is(env, av[2]))) // child
-		return (p(__FILE__, __LINE__, 2), -1);
-	// free(path);
-	
-	printf("main : %s\n", path);
-	// path = path_is(env, av[3]); // parent
-	// pipe(fd);
+	int		fd[2];
+	int		pid;
+
+	pid = 0;
+	if (ac < 5)
+		return (p(NULL, 0, 1), 0);	
+	if (pipe(fd) == -1)
+		return (perror("pipe"), 1);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), 3);
+	if (pid == 0)
+		if (!read_cmd(av, env, fd))
+			return (4);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), 5);
+	if (pid == 0)
+		 if (!write_cmd(av, env, fd))
+		 	return (6);
+	wait(NULL);
 	return (0);
 }

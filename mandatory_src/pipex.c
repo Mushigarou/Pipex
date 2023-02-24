@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:46 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/23 02:17:28 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/24 01:26:24 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,45 @@
 
 #include "pipex.h"
 
+char	*read_cmd(char **av, char **env, int fd[])
+{
+	char	*path;
+	int		in_fd;
+
+	path = NULL;
+	close(fd[0]);
+	in_fd = open(av[1], O_RDONLY, 0777);
+	if (in_fd == -1)
+		return (perror("open 1"), NULL);
+	dup2(in_fd, STDIN_FILENO);
+	close(in_fd);
+	dup2(fd[1], STDOUT_FILENO);
+	close(fd[1]);
+	if (!(path = path_is(env, av[2])))
+		return (p(__FILE__, __LINE__, 2), NULL);
+	execve(path, ft_split(av[2], ' '), env);
+	return (NULL);
+}
+
+char	*write_cmd(char **av, char **env, int fd[])
+{
+	char	*path;
+	int		out_fd;
+
+	path = NULL;
+	out_fd = open(av[4], O_CREAT | O_TRUNC | O_WRONLY, 0777);
+	if (out_fd == -1)
+		return (perror("open 2"), NULL);
+	close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[0]);
+	dup2(out_fd, STDOUT_FILENO);
+	close(out_fd);
+	if (!(path = path_is(env, av[3])))
+		return ((p(__FILE__, __LINE__, 2), NULL));
+	execve(path, ft_split(av[3], ' '), env);
+	return (NULL);
+}
 char	*join_path(char **split, char *cmd)
 {
 	char	**av_cmd;
@@ -57,12 +96,14 @@ char	*join_path(char **split, char *cmd)
 	if (!cmd)
 		return (NULL);
 	av_cmd = ft_split(cmd, ' ');
+	if (!split)
+		return (free_st(split, -1), NULL);
 	tmp = ft_strjoin("/", av_cmd[0]);
 	free_st(av_cmd, -1);
 	while (split && split[i])
 	{
 		if (access(av_cmd[0], X_OK | F_OK) == 0)
-			return (free(tmp), free_st(av_cmd, 0), av_cmd[0]);
+			return (free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
 			path = ft_strjoin(split[i], tmp);
 		if (access(path, X_OK | F_OK) == 0)
 			return (free_st(split, -1), free(tmp), free_st(av_cmd, -1), path);
@@ -77,7 +118,6 @@ char	*join_path(char **split, char *cmd)
 char *path_is(char **env, char *cmd)
 {
 	char	**split;
-	// char	**tmp;
 	
 	split = NULL;
 	if (!env || !(*env) || !cmd)
@@ -91,7 +131,6 @@ char *path_is(char **env, char *cmd)
 				return (p(__FILE__, __LINE__, 0), perror("split"), NULL);
 			return (join_path(split, cmd));
 		}
-		//strnstr(*env, "PWD=")
 		env++;
 	}
 	return (NULL);
