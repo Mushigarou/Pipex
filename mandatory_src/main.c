@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/24 01:39:55 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/24 06:07:01 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int main(int ac, char **av, char **env)
 
 	pid = 0;
 	if (ac < 5)
-		return (p(NULL, 0, 1), 0);	
+		exit(1);	
 	if (pipe(fd) == -1)
 		return (perror("pipe"), 1);
 	pid = fork();
@@ -96,13 +96,21 @@ int main(int ac, char **av, char **env)
 		return (perror("fork"), 3);
 	if (pid == 0)
 		if (!read_cmd(av, env, fd))
-			return (4);
-	pid = fork();
-	if (pid == -1)
+			exit(1);
+	// wait(&stat);
+	// if (WIFEXITED(stat))
+	// 	printf("Exit status: %d\n", WEXITSTATUS(stat));
+	int id;
+	id = fork();
+	if (id == -1)
 		return (perror("fork"), 5);
-	if (pid == 0)
+	if (id == 0)
 		 if (!write_cmd(av, env, fd))
-		 	return (6);
-	wait(NULL);
+			exit(2);
+	// int stat;
+	// waitpid(pid, &stat, 0);
+	// printf("%d\n", stat);
+	// fflush(stdout);
+	// waitpid(id, &stat, 0);
 	return (0);
 }

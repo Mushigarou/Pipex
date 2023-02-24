@@ -6,11 +6,11 @@
 #    By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/15 04:43:36 by mfouadi           #+#    #+#              #
-#    Updated: 2023/02/22 10:13:40 by mfouadi          ###   ########.fr        #
+#    Updated: 2023/02/24 05:05:06 by mfouadi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = bin/pipex
+NAME = pipex
 
 CC = cc
 
