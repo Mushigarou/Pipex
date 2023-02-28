@@ -6,4 +6,6 @@ bin
 obj
 DS_Store
 *.o
-
+infile
+outfile
+pipex

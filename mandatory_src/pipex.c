@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:46 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/24 06:15:08 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/28 05:01:33 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,21 @@
 
 #include "pipex.h"
 
-char	*write_cmd(char **av, char **env, int fd[])
+void	write_cmd(char **av, char **env, int fd[])
 {
 	char	*path;
 	int		in_fd;
+	char **tmp;
 
+	tmp = ft_split(av[2], ' ');
+	if (tmp == NULL || tmp[0] == NULL)
+	{
+		write(2, "pipex: command not found\n", 25);
+		exit(127);
+	}
 	path = NULL;
 	close(fd[0]);
-	in_fd = open(av[1], O_RDONLY, 0444);
+	in_fd = open(av[1], O_RDONLY);
 	if (in_fd == -1)
 	{
 		perror("open 1");
@@ -65,19 +72,26 @@ char	*write_cmd(char **av, char **env, int fd[])
 	close(fd[1]);
 	if (!(path = path_is(env, av[2])))
 	{
-		perror("pipex");
-		exit(1);
+		write(2, "pipex: command not found\n", 25);
+ 		exit(127);
 	}
 	execve(path, ft_split(av[2], ' '), env);
-	exit(1);
-	return (NULL);
+	perror("execve");
+	exit(126);
 }
 
-char	*read_cmd(char **av, char **env, int fd[])
+void	read_cmd(char **av, char **env, int fd[])
 {
 	char	*path;
 	int		out_fd;
+	char	**tmp;
 
+	tmp = ft_split(av[3], ' ');
+	if (tmp == NULL || tmp[0] == NULL)
+	{
+		write(2, "pipex: command not found\n", 25);
+		exit(127);
+	}
 	path = NULL;
 	out_fd = open(av[4], O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (out_fd == -1)
@@ -92,13 +106,14 @@ char	*read_cmd(char **av, char **env, int fd[])
 	close(out_fd);
 	if (!(path = path_is(env, av[3])))
 	{
-		perror("pipex");
-		exit(1);
+		write(2, "pipex: command not found\n", 25);
+		exit(127);
 	}
-	execve(path, ft_split(av[3], ' '), env);
-	exit(1);
-	return (NULL);
+	execve(path, tmp, env);
+	perror("execve");
+	exit(126);
 }
+
 char	*join_path(char **split, char *cmd)
 {
 	char	**av_cmd;
@@ -116,13 +131,12 @@ char	*join_path(char **split, char *cmd)
 	if (av_cmd[0][0] == '/')
 	{
 		if (access(av_cmd[0], X_OK | F_OK) == 0)
-			return (free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
+			return (fprintf(stderr, "\n%s\n", av_cmd[0]), free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
 		else
 		{
 			perror("access");
-			exit(1);
+			exit(2);
 		}
-		
 	}
 	tmp = ft_strjoin("/", av_cmd[0]);
 	free_st(av_cmd, -1);
@@ -139,7 +153,8 @@ char	*join_path(char **split, char *cmd)
 	}
 	free(tmp);
 	free_st(split, -1);
-	exit(1);
+	write(2,"pipex: command not found", 24);
+	exit(127);
 	return (NULL);
 }
 
@@ -161,6 +176,5 @@ char *path_is(char **env, char *cmd)
 		}
 		env++;
 	}
-	exit(1);
 	return (NULL);
 }

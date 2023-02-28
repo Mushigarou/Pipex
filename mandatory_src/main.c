@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/24 06:07:01 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/02/28 04:40:13 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,36 +81,40 @@
 #include "pipex.h"
 
 //p(__FILE__, __LINE__);
+	// int 	stat;
+// No path found
 int main(int ac, char **av, char **env)
 {
 	int		fd[2];
 	int		pid;
+	int		stat;
+	int 	id;
 
+	stat = 0;
 	pid = 0;
-	if (ac < 5)
-		exit(1);	
+	if (ac != 5 || !env || !(*env))
+		exit(1);
 	if (pipe(fd) == -1)
 		return (perror("pipe"), 1);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 3);
 	if (pid == 0)
-		if (!read_cmd(av, env, fd))
-			exit(1);
-	// wait(&stat);
-	// if (WIFEXITED(stat))
-	// 	printf("Exit status: %d\n", WEXITSTATUS(stat));
-	int id;
+		read_cmd(av, env, fd);
 	id = fork();
 	if (id == -1)
 		return (perror("fork"), 5);
 	if (id == 0)
-		 if (!write_cmd(av, env, fd))
-			exit(2);
-	// int stat;
-	// waitpid(pid, &stat, 0);
-	// printf("%d\n", stat);
-	// fflush(stdout);
-	// waitpid(id, &stat, 0);
-	return (0);
+		write_cmd(av, env, fd);
+	stat = 0;
+	wait(&stat);
+	if (WIFEXITED(stat))
+	{
+		stat = WEXITSTATUS(stat);
+		if (stat != 0)
+				exit(stat);
+	}
+	close(fd[0]);
+	close(fd[1]);
+	return (stat);
 }
