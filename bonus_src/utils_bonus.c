@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/26 23:50:28 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/02 02:27:41 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,13 @@ void free_st(char **split, int not_this_one)
 void	close_fd(int **fd)
 {
 	int	i;
-	int size = sizeof(fd) / sizeof(fd[i])
-
+	int size;
+	
+	if (!fd || !(*fd))
+		return ;
+	size = sizeof(fd) / sizeof(fd[i]);
 	i = 0;
-	while (i < size)
+	while (i < size-1)
 	{
 		close(fd[i][0]);
 		close(fd[i][1]);

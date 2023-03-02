@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/28 01:14:42 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/02 02:28:00 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,27 @@
 #include <fcntl.h>
 // **	wait(), waitpid()
 #include <sys/wait.h>
-// ** Errno global variable
+// **	Errno global variable
 #include <errno.h>
 
 // ** Print a message
 void	p(char *file, int line, int msg);
 // **	Free memory allocated
 void	free_st(char **split, int not_this_one);
-// ** Get PATH variable from the environment, returns path of the command
+// **	Get PATH variable from the environment, returns path of the command
 char	*path_is(char **env, char *cmd);
 // **	Read from the input file, then writes in the pipe
 void	write_cmd(char **av, char **env, int fd[]);
 // **	Reads from the pipe, then writes in outfile
 void	read_cmd(char **av, char **env, int fd[]);
-
 // **	Read from the input file, then writes in the pipe
-char *first_cmd(char **av, char **env, int fd[]);
+void	first_cmd(char **av, char **env, int fd[]);
 
-char *middle_cmd(char **av, char **env, int *fd[], int i);
+void	middle_cmd(char *av, char **env, int r_fd[], int w_fd[]);
 
 // **	Reads from the pipe, then writes in outfile
-char *last_cmd(int ac, char **av, char **env, int fd[]);
+void	last_cmd(int ac, char **av, char **env, int fd[]);
+// **	Closes all file descriptors
+void	close_fd(int **fd);
 
-#endif // PIPEX_H
+#endif	// PIPEX_H

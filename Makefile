@@ -6,7 +6,7 @@
 #    By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/15 04:43:36 by mfouadi           #+#    #+#              #
-#    Updated: 2023/02/27 01:09:07 by mfouadi          ###   ########.fr        #
+#    Updated: 2023/03/02 04:57:32 by mfouadi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,8 +52,12 @@ debug :
 	make
 	$(CC) $(CFLAGS) -fsanitize=address $(OBJ_M_SRC_PATH) $(LIBFT_ARCHIVE) -o $(NAME)
 
-# bonus : dir lib $(OBJ_B_SRC_PATH)
-# 	$(CC) $(CFLAGS) $(OBJ_B_SRC_PATH) $(LIBFT_ARCHIVE) -o $(NAME)
+debug_b : lib dir $(OBJ_B_SRC_PATH)
+	make
+	$(CC) $(CFLAGS) -fsanitize=address $(OBJ_B_SRC_PATH) $(LIBFT_ARCHIVE) -o $(NAME)
+
+bonus : dir lib $(OBJ_B_SRC_PATH)
+	$(CC) $(CFLAGS) $(OBJ_B_SRC_PATH) $(LIBFT_ARCHIVE) -o $(NAME)
 
 obj/%.o : bonus_src/%.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@ -I include -I Libft

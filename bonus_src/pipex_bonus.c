@@ -6,38 +6,57 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:47 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/27 02:08:23 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/02 02:27:24 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char *middle_cmd(char **av, char **env, int *fd[], int i)
+void	middle_cmd(char *av, char **env, int r_fd[], int w_fd[])
 {
-	char *path;
-	// int in_fd;
+	char	*path;
+	char	**tmp;
 
 	path = NULL;
-	dup2(fd[i-1][0], STDIN_FILENO);
-	dup2(fd[i][1], STDOUT_FILENO);
-	
-	if (!(path = path_is(env, av[i])))
+	tmp = ft_split(av, ' ');
+	if (!tmp || !(*tmp))
+	{
+		write(2, "pipex: command not found\n", 25);
+		exit(127);
+	}
+	// printf("Mid: i == %d \n", i);
+	dup2(r_fd[0], STDIN_FILENO);
+	dup2(w_fd[1], STDOUT_FILENO);
+	printf("av == %s | tmp[0] == %s\n", av, tmp[0]);
+	if (!(path = path_is(env, tmp[0])))
 	{
 		perror("pipex");
 		exit(127);
 	}
-	execve(path, ft_split(av[i], ' '), env);
-	return (NULL);
+	// close_fd(&r_fd);
+	// close_fd(&w_fd);
+	// fprintf(stdout, "Middle : tmp[0] = %s | tmp[1] = %s | path = %s\n", tmp[0], tmp[1], path);
+	// fflush(stdout);
+	execve(path, ft_split(av, ' '), env);
+	perror("execve 2");
+	exit(126);
 }
 
-char *first_cmd(char **av, char **env, int fd[])
+void first_cmd(char **av, char **env, int fd[])
 {
 	char *path;
 	int in_fd;
+	char **tmp;
 
+	tmp = ft_split(av[2], ' ');
+	if (tmp == NULL || tmp[0] == NULL)
+	{
+		write(2, "pipex: command not found\n", 25);
+		exit(127);
+	}
 	path = NULL;
 	close(fd[0]);
-	in_fd = open(av[1], O_RDONLY, 0444);
+	in_fd = open(av[1], O_RDONLY);
 	if (in_fd == -1)
 	{
 		perror("open 1");
@@ -49,39 +68,50 @@ char *first_cmd(char **av, char **env, int fd[])
 	close(fd[1]);
 	if (!(path = path_is(env, av[2])))
 	{
-		perror("pipex");
+		write(2, "pipex: command not found\n", 25);
 		exit(127);
 	}
+	fprintf(stdout, "First : av[1] = %s | tmp[0] = %s | tmp[1] = %s | path = %s\n", av[1], tmp[0], tmp[1], path);
 	execve(path, ft_split(av[2], ' '), env);
-	return (NULL);
+	perror("execve 1");
+	exit(126);
 }
 
-char *last_cmd(int ac, char **av, char **env, int fd[])
+void last_cmd(int ac, char **av, char **env, int fd[])
 {
 	char *path;
 	int out_fd;
+	char **tmp;
 
+	tmp = ft_split(av[ac-2], ' ');
+	if (tmp == NULL || tmp[0] == NULL)
+	{
+		write(2, "pipex: command not found\n", 25);
+		exit(127);
+	}
 	path = NULL;
+	close(fd[1]);
 	out_fd = open(av[ac-1], O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (out_fd == -1)
 	{
 		perror("open 2");
 		exit(1);
 	}
-	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[0]);
 	dup2(out_fd, STDOUT_FILENO);
 	close(out_fd);
-	if (!(path = path_is(env, av[3])))
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[0]);
+	if (!(path = path_is(env, av[ac-2])))
 	{
-		perror("pipex");
+		write(2, "pipex: command not found\n", 25);
 		exit(127);
 	}
-	// closefd
-	execve(path, ft_split(av[3], ' '), env);
-	return (NULL);
+	fprintf(stdout, "Last : ac-1 = %s | tmp[0] = %s | tmp[1] =%s | path = %s\n", av[ac-1], tmp[0], tmp[1], path);
+	if (execve(path, ft_split(av[ac-2], ' '), env) < 0)
+		perror("execve 3");
+	exit(126);
 }
+
 char *join_path(char **split, char *cmd)
 {
 	char **av_cmd;
@@ -99,11 +129,11 @@ char *join_path(char **split, char *cmd)
 	if (av_cmd[0][0] == '/')
 	{
 		if (access(av_cmd[0], X_OK | F_OK) == 0)
-			return (free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
+			return (fprintf(stderr, "\n%s\n", av_cmd[0]), free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
 		else
 		{
 			perror("access");
-			exit(127);
+			exit(2);
 		}
 	}
 	tmp = ft_strjoin("/", av_cmd[0]);
@@ -121,6 +151,7 @@ char *join_path(char **split, char *cmd)
 	}
 	free(tmp);
 	free_st(split, -1);
+	write(2, "pipex: command not found\n", 25);
 	exit(127);
 	return (NULL);
 }
@@ -143,7 +174,6 @@ char *path_is(char **env, char *cmd)
 		}
 		env++;
 	}
-	exit(1);
 	return (NULL);
 }
 
