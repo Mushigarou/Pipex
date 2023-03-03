@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:46:05 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/03 06:39:41 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/03 06:40:13 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,15 @@ int	main(int ac, char **av, char **env)
 				}
 			else if (i == ac-4)
 			{
-				int j = 0;
-				while (j < ac - 4)
-				{
-					// printf i
-					if (j != i)
-						close(fd[j][0]);
-					close(fd[j][1]);
-					j++;
-				}
+				// int j = 0;
+				// while (j < ac - 4)
+				// {
+				// 	// printf i
+				// 	if (j != i)
+				// 		close(fd[j][0]);
+				// 	close(fd[j][1]);
+				// 	j++;
+				// }
 				last_cmd(ac, av, env, fd[i-1]);
 			}
 			else
