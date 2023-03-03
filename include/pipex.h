@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/02 02:28:00 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/03 03:47:37 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,12 @@
 // **	Errno global variable
 #include <errno.h>
 
+typedef struct	s_pipe{
+	int	fd[2];
+} s_pipe;
+
 // ** Print a message
-void	p(char *file, int line, int msg);
+void	msg(char *err, int status);
 // **	Free memory allocated
 void	free_st(char **split, int not_this_one);
 // **	Get PATH variable from the environment, returns path of the command
@@ -45,11 +49,13 @@ void	read_cmd(char **av, char **env, int fd[]);
 // **	Read from the input file, then writes in the pipe
 void	first_cmd(char **av, char **env, int fd[]);
 
-void	middle_cmd(char *av, char **env, int r_fd[], int w_fd[]);
+void	middle_cmd(char *av, char **env);
 
 // **	Reads from the pipe, then writes in outfile
 void	last_cmd(int ac, char **av, char **env, int fd[]);
 // **	Closes all file descriptors
 void	close_fd(int **fd);
+
+void ft_dup2(int old, int new);
 
 #endif	// PIPEX_H
