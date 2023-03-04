@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/02 06:37:34 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/04 00:38:50 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,32 @@ void	ft_dup2(int old, int new)
 	{
 		perror("dup2");
 		exit(1);
+	}
+}
+
+void close_pipes(int i, int ac, int fd[][2])
+{
+	int	j;
+
+	j = i;
+	if (i == 0)
+	{	
+		while (j < ac - 4)
+		{
+			if (close(fd[j][0]) != 0)
+				msg("close_1", 1);
+			if (j != i)
+				if (close(fd[j][1]) != 0)
+					msg("close_1", 1);
+			j++;
+		}
+		return ;
+	}
+	while (j < ac - 4)
+	{
+
+		close(fd[j][0]);
+		close(fd[j][1]);
+		j++;
 	}
 }

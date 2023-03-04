@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/03 06:25:21 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/04 00:17:21 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ void	last_cmd(int ac, char **av, char **env, int fd[]);
 void	close_fd(int **fd);
 
 void	ft_dup2(int old, int new);
+
+void close_pipes(int i, int ac, int fd[][2]);
 
 #endif	// PIPEX_H

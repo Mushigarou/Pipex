@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:47 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/03 06:31:06 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/04 00:38:06 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	middle_cmd(char *av, char **env)
 	msg("execve", 126);
 }
 
+// Opens the infile, then writes to the first pipe. finally, 
+// executes first command
 void first_cmd(char **av, char **env, int fd[])
 {
 	char *path;
@@ -41,9 +43,7 @@ void first_cmd(char **av, char **env, int fd[])
 		{perror("open 1");exit(1);}
 	ft_dup2(in_fd, STDIN_FILENO);
 	ft_dup2(fd[1], STDOUT_FILENO);
-	// close(fd[0]);
-	// close(in_fd);
-	// close(fd[1]);
+	close(fd[1]);
 	path = path_is(env, av[2]);
 	execve(path, tmp, env);
 	msg("execve", 126);
@@ -63,10 +63,10 @@ void last_cmd(int ac, char **av, char **env, int fd[])
 	if (out_fd == -1)
 		{perror("open 2");exit(1);}
 	ft_dup2(out_fd, STDOUT_FILENO);
-	path = path_is(env, av[ac-2]);
-	close(fd[1]);
 	close(out_fd);
+	close(fd[1]);
 	close(fd[0]);
+	path = path_is(env, av[ac-2]);
 	execve(path, tmp, env);
 	msg("execve", 126);
 }
