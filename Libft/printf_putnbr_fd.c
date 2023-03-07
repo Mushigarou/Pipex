@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 23:16:34 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/15 19:36:07 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/07 23:14:44 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "libft.h"
 
-int printf_putnbr_fd(int n, int fd)
+int	printf_putnbr_fd(int n, int fd)
 {
 	int	len;
 

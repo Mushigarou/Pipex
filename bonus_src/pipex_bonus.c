@@ -6,132 +6,85 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:47 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/04 00:38:06 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/06 00:07:09 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	middle_cmd(char *av, char **env)
+char	*look_for_path(char **av_cmd, char **env_path)
 {
+	char	*tmp;
 	char	*path;
-	char	**tmp;
+	int		i;
 
-	path = NULL;
-	tmp = ft_split(av, ' ');
-	if (!tmp || !(*tmp))
-		msg("pipex: command not found\n", 127);
-	path = path_is(env, tmp[0]);
-	execve(path, tmp, env);
-	msg("execve", 126);
+	i = 0;
+	tmp = ft_strjoin("/", av_cmd[0]);
+	free_st(av_cmd, -1);
+	while (env_path && env_path[i])
+	{
+		if (i == 0)
+			if (access(av_cmd[0], X_OK | F_OK) == 0)
+				return (free_st(env_path, -1),
+					free(tmp), free_st(av_cmd, 0), av_cmd[0]);
+		path = ft_strjoin(env_path[i], tmp);
+		if (access(path, X_OK | F_OK) == 0)
+			return (free_st(env_path, -1),
+				free(tmp), free_st(av_cmd, -1), path);
+		free(path);
+		i++;
+	}
+	free(tmp);
+	free_st(env_path, -1);
+	msg("pipex: command not found:join_path", 127, 1);
+	return (NULL);
 }
 
-// Opens the infile, then writes to the first pipe. finally, 
-// executes first command
-void first_cmd(char **av, char **env, int fd[])
+char	*join_path(char **env_path, char *cmd)
 {
-	char *path;
-	int in_fd;
-	char **tmp;
-
-	tmp = ft_split(av[2], ' ');
-	if (tmp == NULL || tmp[0] == NULL)
-		msg("pipex: command not found\n", 127);
-	path = NULL;
-	in_fd = open(av[1], O_RDONLY);
-	if (in_fd == -1)
-		{perror("open 1");exit(1);}
-	ft_dup2(in_fd, STDIN_FILENO);
-	ft_dup2(fd[1], STDOUT_FILENO);
-	close(fd[1]);
-	path = path_is(env, av[2]);
-	execve(path, tmp, env);
-	msg("execve", 126);
-}
-
-void last_cmd(int ac, char **av, char **env, int fd[])
-{
-	char *path;
-	int out_fd;
-	char **tmp;
-
-	path = NULL;
-	tmp = ft_split(av[ac-2], ' ');
-	if (tmp == NULL || tmp[0] == NULL)
-		{write(2, "pipex: command not found\n", 25);exit(127);}
-	out_fd = open(av[ac-1], O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	if (out_fd == -1)
-		{perror("open 2");exit(1);}
-	ft_dup2(out_fd, STDOUT_FILENO);
-	close(out_fd);
-	close(fd[1]);
-	close(fd[0]);
-	path = path_is(env, av[ac-2]);
-	execve(path, tmp, env);
-	msg("execve", 126);
-}
-
-char *join_path(char **split, char *cmd)
-{
-	char **av_cmd;
-	char *tmp;
-	char *path;
-	int i;
+	char	**av_cmd;
+	char	*tmp;
+	int		i;
 
 	i = 0;
 	if (!cmd)
-		msg("command not found", 1);
+		msg("command not found:join_path", 1, 1);
 	av_cmd = ft_split(cmd, ' ');
-	if (!split)
+	if (!env_path)
 	{
-		free_st(split, -1);
-		msg("split", 1);
+		free_st(env_path, -1);
+		msg("split", 1, 1);
 	}
 	tmp = NULL;
 	if (av_cmd[0][0] == '/')
 	{
 		if (access(av_cmd[0], X_OK | F_OK) == 0)
-			return (fprintf(stderr, "\n%s\n", av_cmd[0]), free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
-		msg("access", 2);
+			return (free_st(env_path, -1),
+				free(tmp), free_st(av_cmd, 0), av_cmd[0]);
+		msg("access", 2, 0);
 	}
-	tmp = ft_strjoin("/", av_cmd[0]);
-	free_st(av_cmd, -1);
-	while (split && split[i])
-	{
-		if (i == 0)
-			if (access(av_cmd[0], X_OK | F_OK) == 0)
-				return (free_st(split, -1), free(tmp), free_st(av_cmd, 0), av_cmd[0]);
-		path = ft_strjoin(split[i], tmp);
-		if (access(path, X_OK | F_OK) == 0)
-			return (free_st(split, -1), free(tmp), free_st(av_cmd, -1), path);
-		free(path);
-		i++;
-	}
-	free(tmp);
-	free_st(split, -1);
-	msg("pipex: command not found", 127);
-	return (NULL);
+	return (look_for_path(av_cmd, env_path));
 }
 
-char *path_is(char **env, char *cmd)
+char	*path_is(char **env, char *cmd)
 {
-	char **split;
+	char	**split;
 
 	split = NULL;
 	if (!env || !(*env) || !cmd)
-		msg("command or env not found", 1);
+		msg("command or env not found", 1, 1);
 	while (env && *env)
 	{
 		if (strncmp(*env, "PATH=", 5) == 0)
 		{
 			split = ft_split(*env + 5, ':');
 			if (!split)
-				msg("split", 2);
+				msg("split", 2, 0);
 			return (join_path(split, cmd));
 		}
 		env++;
 	}
-	msg("PATH variable not found", 2);
+	msg("PATH variable not found", 2, 0);
 	return (NULL);
 }
 

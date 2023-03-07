@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:40 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/22 11:36:36 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/07 22:52:17 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,21 @@ void	p(char *file, int line, int msg)
 		ft_printf("%s line %d	", file, line);
 		ft_printf("PATH or command not found");
 	}
-	return;
+	return ;
+}
+
+void	msg(char *err, int status, int bool)
+{
+	if (bool == 0)
+	{
+		perror(err);
+		exit(status);
+	}
+	else
+	{
+		write(2, err, ft_strlen(err));
+		exit(status);
+	}
 }
 
 // **	if not_this_one is set, it will free all the pointers,

@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 10:21:11 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/15 19:33:13 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/07 23:14:48 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "libft.h"
 
-int printf_putstr_fd(char *s, int fd)
+int	printf_putstr_fd(char *s, int fd)
 {
 	int	len;
 

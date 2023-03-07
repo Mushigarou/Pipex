@@ -6,13 +6,13 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 06:11:11 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/15 19:38:25 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/07 23:14:52 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int printf_putunbr_fd(unsigned int n, int fd)
+int	printf_putunbr_fd(unsigned int n, int fd)
 {
 	int	len;
 
