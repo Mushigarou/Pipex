@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 05:05:49 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 09:16:58 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,13 @@ void	ft_dup2(int old, int new, char *err)
 		perror(err);
 		exit(1);
 	}
+}
+
+void	init_data(t_data *data, int ac, char **av, char **env)
+{
+	ft_memset(data, 0, sizeof(t_data));
+	data->av = av;
+	data->ac = ac;
+	data->env = env;
+	data->filename = heredoc_filename(data);
 }

@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:47 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/06 00:07:09 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 09:38:48 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*look_for_path(char **av_cmd, char **env_path)
 	}
 	free(tmp);
 	free_st(env_path, -1);
-	msg("pipex: command not found:join_path", 127, 1);
+	msg("pipex: command not found", 127, 1);
 	return (NULL);
 }
 
@@ -48,7 +48,7 @@ char	*join_path(char **env_path, char *cmd)
 
 	i = 0;
 	if (!cmd)
-		msg("command not found:join_path", 1, 1);
+		msg("pipex: command not found", 1, 1);
 	av_cmd = ft_split(cmd, ' ');
 	if (!env_path)
 	{
@@ -72,7 +72,7 @@ char	*path_is(char **env, char *cmd)
 
 	split = NULL;
 	if (!env || !(*env) || !cmd)
-		msg("command or env not found", 1, 1);
+		msg("pipex: command or env not found", 1, 1);
 	while (env && *env)
 	{
 		if (strncmp(*env, "PATH=", 5) == 0)
@@ -84,7 +84,7 @@ char	*path_is(char **env, char *cmd)
 		}
 		env++;
 	}
-	msg("PATH variable not found", 2, 0);
+	msg("pipex: environment path variable not found", 2, 1);
 	return (NULL);
 }
 

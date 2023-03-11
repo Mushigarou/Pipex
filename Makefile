@@ -6,7 +6,7 @@
 #    By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/15 04:43:36 by mfouadi           #+#    #+#              #
-#    Updated: 2023/03/11 05:56:23 by mfouadi          ###   ########.fr        #
+#    Updated: 2023/03/11 09:53:37 by mfouadi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,9 +67,10 @@ clean :
 	$(RM) obj
 
 fclean : clean re_lib
-	$(RM) $(LIBFT_ARCHIVE) bin
+	$(RM) $(LIBFT_ARCHIVE) $(NAME)
 
 re : re_lib fclean all
 
-.PHONY : all $(NAME) clean fclean re lib dir re_lib debug bonus
+.PHONY : all $(NAME) clean fclean re lib dir re_lib debug bonus debug_b
+.SILENT : re fclean clean bonus debug debug_b re_lib lib dir $(NAME) all 
 .DEFAULT_GOAL := all

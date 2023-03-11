@@ -6,21 +6,20 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 06:18:56 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 10:11:05 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-// **	Maximum nbr of fd's is 10240 per process or shell
-// **	10240 /2 = 5120 pipes, since each pipe need 2 fd's
-# define PIPES 5120
 //**	Err message
 # define CMD_SYNTAX "./pipex \"infile\" \"cmd_1 -options\"\
  ...\"cmd_n -options\" \"outfile\"\n"
 # define CMD_SYNTAX_M "./pipex \"infile\" \"cmd_1 -options\"\
  \"cmd_2 -options\" \"outfile\"\n"
+# define CMD_SYNTAX_H "./pipex here_doc DELIMITER \"cmd_1 -options\"\
+ ...\"cmd_n -options\" \"outfile\"\n"
 
 // **	Libft header
 # include "../Libft/libft.h"
@@ -75,5 +74,9 @@ void	last_cmd(int ac, char **av, char **env, int fd[]);
 void	ft_dup2(int old, int new, char *err);
 
 void	here_document(t_data data, int fd[]);
+
+char	*heredoc_filename(t_data *data);
+
+void	init_data(t_data *data, int ac, char **av, char **env);
 
 #endif // PIPEX_H
