@@ -6,7 +6,7 @@
 #    By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/15 04:43:36 by mfouadi           #+#    #+#              #
-#    Updated: 2023/03/06 05:06:35 by mfouadi          ###   ########.fr        #
+#    Updated: 2023/03/11 05:56:23 by mfouadi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CC = cc
 CFLAGS = -Wall -Werror -Wextra
 
 M_SRC = pipex.c main.c utils.c
-B_SRC = pipex_bonus.c main_bonus.c utils_bonus.c exec_bonus.c
+B_SRC = pipex_bonus.c main_bonus.c utils_bonus.c exec_bonus.c here_doc.c
 
 OBJ_M_SRC = $(M_SRC:.c=.o)
 OBJ_B_SRC = $(B_SRC:.c=.o)

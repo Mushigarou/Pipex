@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:06:17 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/10 20:16:33 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 06:45:54 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,6 @@ unsigned long long	ft_rand(void)
 {
 	static unsigned long long	rand;
 
-	rand = rand * 6364136223846793005 + 1;
-	return ((unsigned long long)(rand) % ULLONG_MAX);
+	rand = rand * 1103515245 + 12345;
+	return ((unsigned long long)(rand) % 2147483648);
 }

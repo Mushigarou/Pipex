@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 00:04:46 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 05:02:18 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 05:55:39 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,18 @@ void	last_cmd(int ac, char **av, char **env, int fd[])
 	tmp = ft_split(av[ac - 2], ' ');
 	if (tmp == NULL || tmp[0] == NULL)
 		msg("pipex: command not found\n", 127, 1);
-	out_fd = open(av[ac - 1], O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	if (out_fd == -1)
-		msg("open", 1, 0);
+	if (ft_strncmp(av[2], "here_doc", 9))
+	{
+		out_fd = open(av[ac - 1], O_CREAT | O_APPEND | O_WRONLY, 0644);
+		if (out_fd == -1)
+			msg("open", 1, 0);
+	}
+	else
+	{
+		out_fd = open(av[ac - 1], O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		if (out_fd == -1)
+			msg("open", 1, 0);
+	}
 	ft_dup2(out_fd, STDOUT_FILENO, "dup2:1st_cmd");
 	close(out_fd);
 	close(fd[1]);

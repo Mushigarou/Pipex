@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 05:22:36 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 06:18:56 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,18 @@
 // **	Errno global variable
 # include <errno.h>
 
+typedef struct s_data
+{
+	char	**av;
+	char	**env;
+	int		ac;
+	char	*filename;
+	int		pid;
+	int		stat;
+	int		i;
+
+}	t_data;
+
 // ** Print a message
 void	msg(char *err, int status, int bool);
 // **	Free memory allocated
@@ -61,5 +73,7 @@ void	middle_cmd(char *av, char **env, int fd[2]);
 void	last_cmd(int ac, char **av, char **env, int fd[]);
 // **	Checks return value of dup2()
 void	ft_dup2(int old, int new, char *err);
+
+void	here_document(t_data data, int fd[]);
 
 #endif // PIPEX_H
