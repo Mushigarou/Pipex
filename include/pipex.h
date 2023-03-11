@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/07 23:16:06 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/11 05:22:36 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,6 @@
 // **	Errno global variable
 # include <errno.h>
 
-typedef struct s_data{
-	int		ac;
-	int		pipes_nbr;
-	char	**av;
-	char	**env;
-	int		stat;
-	int		pid;
-	int		fd[][2];
-}	t_data;
-
 // ** Print a message
 void	msg(char *err, int status, int bool);
 // **	Free memory allocated
@@ -65,15 +55,11 @@ void	read_cmd(char **av, char **env, int fd[]);
 // **	Read from the input file, then writes in the pipe
 void	first_cmd(char **av, char **env, int fd[]);
 
-void	middle_cmd(char *av, char **env);
+void	middle_cmd(char *av, char **env, int fd[2]);
 
 // **	Reads from the pipe, then writes in outfile
 void	last_cmd(int ac, char **av, char **env, int fd[]);
-// **	Closes all file descriptors
-void	close_fd(int **fd);
 // **	Checks return value of dup2()
 void	ft_dup2(int old, int new, char *err);
-// **	Closes all given pipes
-void	close_pipes(int i, int ac, int fd[][2]);
 
-#endif	// PIPEX_H
+#endif // PIPEX_H
