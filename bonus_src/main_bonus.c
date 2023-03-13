@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:46:05 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 10:11:38 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/13 03:13:53 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ int	main(int ac, char **av, char **env)
 		data.pid = fork();
 		if (data.pid == 0)
 			exec_child(data, fd, data.i);
-		if (data.i < ac - 4)
-			wait_childs(data.stat);
 		ft_dup2(fd[0], STDIN_FILENO, "dup2_main");
 		close(fd[0]);
 		close(fd[1]);
