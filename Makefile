@@ -6,7 +6,7 @@
 #    By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/15 04:43:36 by mfouadi           #+#    #+#              #
-#    Updated: 2023/03/11 09:53:37 by mfouadi          ###   ########.fr        #
+#    Updated: 2023/03/12 02:37:21 by mfouadi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,7 @@ obj/%.o : bonus_src/%.c $(HEADER)
 
 clean :
 	make clean -C Libft
-	$(RM) obj
+	$(RM) obj heredoc_*
 
 fclean : clean re_lib
 	$(RM) $(LIBFT_ARCHIVE) $(NAME)

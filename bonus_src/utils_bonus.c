@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 02:45:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/21 00:32:57 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/21 00:49:14 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,5 @@ void	init_data(t_data *data, int ac, char **av, char **env)
 	data->av = av;
 	data->ac = ac;
 	data->env = env;
-	data->filename = heredoc_filename(data);
+	heredoc_filename(&data);
 }

@@ -6,28 +6,30 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 03:10:22 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 09:39:29 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/21 00:54:10 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*heredoc_filename(t_data *data)
+void	heredoc_filename(t_data **data)
 {
 	char	*tmp;
+	char	*name;
 	int		i;
 
 	i = -1;
-	while (++i < 100)
+	while (++i < 200)
 	{
 		tmp = ft_itoa(i);
-		data->filename = ft_strjoin("heredoc_", tmp);
+		name = ft_strjoin("/tmp/heredoc_", tmp);
 		free(tmp);
-		if (access(data->filename, F_OK) != 0)
-			break ;
-		free(data->filename);
+		ft_strlcpy((*data)->filename, name, ft_strlen(name) + 4);
+		free(name);
+		if (access((*data)->filename, F_OK) != 0)
+			return ;
 	}
-	return (data->filename);
+	msg("delete /tmp/heredoc_{0, 1...}", 2, 1);
 }
 
 int	read_stdin(t_data data, int in_fd)
@@ -42,17 +44,23 @@ int	read_stdin(t_data data, int in_fd)
 	{
 		p = get_next_line(0);
 		tmp = ft_strtrim(p, "\n");
-		if (!p)
-			msg("pipex: no input provided", 1, 1);
 		if (ft_strncmp(data.av[2], tmp, ft_strlen(data.av[2]) + 1) == 0)
 			break ;
+		free(tmp);
 		write(in_fd, p, ft_strlen(p));
 		free(p);
-		free(tmp);
 	}
+	free(tmp);
+	free(p);
+	close(in_fd);
+	in_fd = open(data.filename, O_CREAT | O_RDWR, 0644);
+	if (in_fd < 0)
+		msg("open", 2, 0);
 	return (in_fd);
 }
 
+// **	Reads from STDIN then writes to a file, which will be used later
+// **		as the STDIN for the second command
 void	here_document(t_data data, int fd[])
 {
 	char	**tmp;

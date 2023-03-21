@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:36 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/07 23:05:22 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/12 20:42:53 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@
 **		parent's process (in child process) = 9406
 **		parent's process (in parent process) = 6907
 **	************
-**		parent's id = Child's process  (in child process)
-**		Child's process  (in parent process) = parent's process(in child process
-**		parent's process (in parent process) is a unique pid
+**		parent's id = Child's id (in child process)
+**		Child's id  (in parent process) = parent's id(in child process
+**		parent's id (in parent process) is a unique pid
 
 */
 #include "pipex.h"

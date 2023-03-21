@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:32:00 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/21 00:32:37 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/21 00:48:13 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@
  \"cmd_2 -options\" \"outfile\"\n"
 # define CMD_SYNTAX_H "./pipex here_doc DELIMITER \"cmd_1 -options\"\
  ...\"cmd_n -options\" \"outfile\"\n"
+// **	size of filename array
+# define ARR_SIZE 18
 
 // **	Libft header
 # include "../Libft/inc/libft.h"
 // **	get_next_line()
-# include "../Libft/inc/get_next_line.h"
+#include "../Libft/inc/get_next_line.h"
 // **	ft_printf()
-# include "../Libft/inc/ft_printf.h"
+#include "../Libft/inc/ft_printf.h"
 // **	exit(), malloc(), free()
 # include <stdlib.h>
 // **	sterror(), perror()
@@ -40,15 +42,13 @@
 # include <sys/wait.h>
 // **	Errno global variable
 # include <errno.h>
-// **	for 'bool' type
-# include <stdbool.h>
 
 typedef struct s_data
 {
 	char	**av;
 	char	**env;
 	int		ac;
-	char	*filename;
+	char	filename[ARR_SIZE];
 	int		pid;
 	int		stat;
 	int		i;
@@ -77,7 +77,7 @@ void	ft_dup2(int old, int new, char *err);
 
 void	here_document(t_data data, int fd[]);
 
-char	*heredoc_filename(t_data *data);
+void	heredoc_filename(t_data **data);
 
 void	init_data(t_data *data, int ac, char **av, char **env);
 
