@@ -6,15 +6,15 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 04:44:40 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/11 09:42:49 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/21 00:32:32 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	msg(char *err, int status, int bool)
+void	msg(char *err, int status, int bol)
 {
-	if (bool == 0)
+	if (bol == 0)
 	{
 		perror(err);
 		exit(status);

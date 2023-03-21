@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/05 04:06:20 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/11/07 05:03:17 by mfouadi          ###   ########.fr       */
+/*   Created: 2022/12/02 04:09:28 by mfouadi           #+#    #+#             */
+/*   Updated: 2023/03/15 05:42:26 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// Adds the node new at the end of the list.
-#include "libft.h"
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
-{
-	t_list	*tmp;
+# ifndef STDOUT
+#  define STDOUT 1
+# endif // STDOUT
 
-	if (!lst || !new)
-		return ;
-	if (!(*lst))
-		return (*lst = new, (void)0);
-	tmp = ft_lstlast(*lst);
-	tmp->next = new;
-}
+# include "libft.h"
+# include <stdio.h>
+# include <stdarg.h>
+# include <unistd.h>
+
+int			ft_printf(const char *fmt, ...);
+long	long	wr_address(unsigned long x);
+int			ft_putunbr_fd(unsigned int n, int fd);
+void		conv_hex(unsigned int x, int *len, int sp);
+
+#endif // FT_PRINTF_H

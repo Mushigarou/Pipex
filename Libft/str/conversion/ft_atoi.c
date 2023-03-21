@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 22:25:31 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/02/12 20:29:51 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/17 05:51:54 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ int	ft_atoi(const char *str)
 		sign *= -1;
 		str++;
 	}
+	// "   +kladjsfh"
 	else if (*str == '+')
 		str++;
+	// if (is)
 	while (*str != '\0' && ft_isdigit(*str))
 	{
 		check = res;
@@ -63,5 +65,7 @@ int	ft_atoi(const char *str)
 			return (-1);
 		str++;
 	}
+	// if (*str != 0)
+	// 	error
 	return (res * sign);
 }

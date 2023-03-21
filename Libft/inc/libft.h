@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 22:33:09 by mfouadi           #+#    #+#             */
-/*   Updated: 2023/03/10 19:14:00 by mfouadi          ###   ########.fr       */
+/*   Updated: 2023/03/19 08:44:37 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/file.h>
+# include <stdbool.h>
+# include <stdbool.h>
+# include "sorting.h"
+# include "get_next_line.h"
+# include "ft_printf.h"
 
 # ifndef NULL_CHAR
 #  define  NULL_CHAR 1
 # endif // #define NULL_CHAR
-
-// typedef struct s_rand
-// {
-// 	unsigned long long	rand;
-// }	t_rand;
 
 typedef struct s_list
 {
@@ -38,7 +38,13 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-char	*ft_itoa(int n);
+typedef struct s_node
+{
+	void			*data;
+	struct s_node	*next;
+	struct s_node	*prev;
+}	t_node;
+
 char	*ft_itoa(int n);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
@@ -97,4 +103,14 @@ int		printf_putunbr_fd(unsigned int n, int fd);
 
 typedef unsigned long long	t_ull;
 t_ull	ft_rand(void);
+
+/*Doubly Linked List*/
+t_node	*new_node(void *data);
+t_node	*last_node(t_node *node);
+void	push_node(t_node **lst, t_node *new);
+void	addback_node(t_node **lst, t_node *new);
+void	addafter_node(t_node *prev_node, t_node *new_node);
+void	addbefore_node(t_node *next_node, t_node *newprev_node);
+void	clear_node(t_node *head);
+
 #endif // #define LIBFT_H
