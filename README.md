@@ -21,10 +21,17 @@ Here is a visualisation of the program how it works in the mandatory part :
 For the bonus part, we have to handle multiple pipes, and « and » when the first parameter is "here_doc".
 
 This :
+
             $> ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2
 Should behave like :
+
             $> < file1 cmd1 | cmd2 | cmd3 ... | cmdn > file2
-            
-Here is another visualisation of how to handle multiple pipes
+And this :
+
+            $> ./pipex here_doc LIMITER cmd cmd1 file
+Should behave like 
+
+            cmd << LIMITER | cmd1 >> file
+Here is a visualisation of how to handle multiple pipes
 
 ![Page_1_4](https://user-images.githubusercontent.com/115739322/227705339-e15003c5-fde2-4436-98b3-8912e3870d32.png)
