@@ -1,14 +1,16 @@
 # Pipex
-## Mandatory
+## Usage
 Pipex is a program that handles pipes and redirections in Unix / Linux systems.
 
-For the mandatory part, here is the syntax that should be given to the program :
+For the mandatory part :
 ```
+ make
  ./pipex infile cmd_1 cmd_2 outfile
  ```
  
-For the bonus part, here is the syntax that should be given to the program :
+For the bonus part :
 ```
+ make
  ./pipex infile cmd_1 ... cmd_n outfile
  ```
  
@@ -47,6 +49,4 @@ $> cmd << LIMITER | cmd1 >> file
 ## Visualisation On How To Handle Multiple Pipes :
 ![Page_1_4](https://user-images.githubusercontent.com/115739322/227705339-e15003c5-fde2-4436-98b3-8912e3870d32.png)
 
-### Contributions to this project are welcome! If you find any issues or have improvements to suggest, please feel free to submit a pull request.
-## License
 This project is licensed under the MIT license
